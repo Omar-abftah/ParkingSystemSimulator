@@ -7,8 +7,9 @@ public class Gate {
         this.parkingLot = parkingLot;
     }
 
-    public void processCar(int carId, int arrivalTime, int parkDuration){
+    public Car processCar(int carId, int arrivalTime, int parkDuration){
         Car car = new Car(gateId, carId, arrivalTime, parkDuration,parkingLot);
         car.start();
+        return car;
     }
 }

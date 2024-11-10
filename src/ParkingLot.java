@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.Semaphore;
 public class ParkingLot {
     private final Semaphore parkingSpots;
@@ -5,30 +7,34 @@ public class ParkingLot {
 
     public ParkingLot(int totalSpots){
         parkingSpots = new Semaphore(totalSpots);
-
     }
 
-    public synchronized boolean park(Car car){
-        if(parkingSpots.tryAcquire()){
+    public boolean park(Car car) throws InterruptedException {
+        if (!parkingSpots.tryAcquire()) {
+            System.out.println(car + " is waiting for a spot.");
+            parkingSpots.acquire();
+        }
+        synchronized (this){
             currentOccupied++;
-            int t = car.getWaitingTime();
-            if(t > 0){
-                System.out.println(car + " parked after waiting for " + t + " units of time. (Parking Status: " + currentOccupied + " spots occupied)");
-            }
-            else{
+            long waitingTime = car.getWaitingTime();
+            if (waitingTime > 0L) {
+                System.out.println(car + " parked after waiting for " + waitingTime + " units of time. (Parking Status: " + currentOccupied + " spots occupied)");
+            } else {
                 System.out.println(car + " parked. (Parking Status: " + currentOccupied + " spots occupied)");
             }
-            return true;
         }
-        else{
-            System.out.println(car + " waiting for a spot.");
-            return false;
-        }
+        return true;
     }
 
-    public synchronized void leave(Car car){
+    public void leave(Car car) {
+        synchronized (this) {
+            currentOccupied--;
+            System.out.println(car + " left after " + car.getParkDuration() + " units of time. (Parking Status: " + currentOccupied + " spots occupied)");
+        }
         parkingSpots.release();
-        currentOccupied--;
-        System.out.println(car + " left after " + car.getParkDuration() + " units of time. (Parking Status: " + currentOccupied + " spots occupied)");
+    }
+
+    public int countCarsInParking(){
+        return currentOccupied;
     }
 }

@@ -6,7 +6,7 @@ public class Car extends Thread{
     private final int arrivalTime;
     private final int parkDuration;
     private final ParkingLot parkingLot ;
-    private int waitingTime = 0 ;
+    private long waitingTime = 0 ;
 
     public Car(int gateId, int carId, int arrivalTime, int parkDuration, ParkingLot parkingLot) {
         this.gateId = gateId;
@@ -22,14 +22,10 @@ public class Car extends Thread{
             Thread.sleep(arrivalTime* 1000L);
             System.out.println(this + " arrived at time " + arrivalTime);
 
-            boolean parked = false;
-            while(!parked){
-                parked = parkingLot.park(this);
-                if(!parked){
-                    Thread.sleep(1000);
-                    waitingTime++;
-                }
-            }
+            long startingTime = System.currentTimeMillis();
+            parkingLot.park(this);
+            waitingTime = (long)Math.ceil((System.currentTimeMillis() - startingTime) / 1000L);
+
             Thread.sleep(parkDuration * 1000L);
             parkingLot.leave(this);
 
@@ -48,7 +44,7 @@ public class Car extends Thread{
         return this.parkDuration;
     }
 
-    public int getWaitingTime(){
+    public long getWaitingTime(){
         return this.waitingTime;
     }
 }
