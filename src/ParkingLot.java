@@ -10,13 +10,15 @@ public class ParkingLot {
     }
 
     public boolean park(Car car) throws InterruptedException {
+        long startingTime = System.currentTimeMillis();
         if (!parkingSpots.tryAcquire()) {
             System.out.println(car + " is waiting for a spot.");
             parkingSpots.acquire();
         }
         synchronized (this){
             currentOccupied++;
-            long waitingTime = car.getWaitingTime();
+            long waitingTime = (long)Math.ceil((float)(System.currentTimeMillis() - startingTime)/ 1000L);
+            car.updateWaitingTime(waitingTime);
             if (waitingTime > 0L) {
                 System.out.println(car + " parked after waiting for " + waitingTime + " units of time. (Parking Status: " + currentOccupied + " spots occupied)");
             } else {

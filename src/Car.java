@@ -22,9 +22,8 @@ public class Car extends Thread{
             Thread.sleep(arrivalTime* 1000L);
             System.out.println(this + " arrived at time " + arrivalTime);
 
-            long startingTime = System.currentTimeMillis();
+
             parkingLot.park(this);
-            waitingTime = (long)Math.ceil((System.currentTimeMillis() - startingTime) / 1000L);
 
             Thread.sleep(parkDuration * 1000L);
             parkingLot.leave(this);
@@ -44,7 +43,7 @@ public class Car extends Thread{
         return this.parkDuration;
     }
 
-    public long getWaitingTime(){
-        return this.waitingTime;
+    public void updateWaitingTime(long time){
+        this.waitingTime = time;
     }
 }
