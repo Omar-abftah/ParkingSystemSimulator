@@ -12,7 +12,7 @@ public class ParkingLot {
     public boolean park(Car car) throws InterruptedException {
         long startingTime = System.currentTimeMillis();
         if (!parkingSpots.tryAcquire()) {
-            System.out.println(car + " is waiting for a spot.");
+            System.out.println(car + " waiting for a spot.");
             parkingSpots.acquire();
         }
         synchronized (this){
