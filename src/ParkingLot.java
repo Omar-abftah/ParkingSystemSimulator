@@ -1,6 +1,5 @@
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.Semaphore;
 public class ParkingLot {
     private final Semaphore parkingSpots;
     private int currentOccupied = 0;
@@ -13,7 +12,7 @@ public class ParkingLot {
         long startingTime = System.currentTimeMillis();
         if (!parkingSpots.tryAcquire()) {
             System.out.println(car + " waiting for a spot.");
-            parkingSpots.acquire();
+            parkingSpots.acquire(car);
         }
         synchronized (this){
             currentOccupied++;
