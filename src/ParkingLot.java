@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-import java.util.Queue;
 public class ParkingLot {
     private final Semaphore parkingSpots;
     private int currentOccupied = 0;
